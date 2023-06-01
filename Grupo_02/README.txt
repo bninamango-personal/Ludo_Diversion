@@ -1,3 +1,3 @@
 Developers:
 01. Antonio Cotera
-02. Antonio Leon_
+02. Antonio Leon
