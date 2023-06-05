@@ -1,21 +1,22 @@
 board = []
-width = 0
-height = 0
+left = 0
+right = 0
 
 
-def Create(w: int, h: int):
-    width = w
-    height = h
-    for i in range(width):
-        board.append([0] * height)
+def Create(l: int, r: int):
+    global board,left,right
+    left = l
+    right = r
+    for i in range(left):
+        board.append([0] * right)
 
 
 def Render():
-    for i in range(width):
-        for j in range(height):
+    for i in range(left):
+        for j in range(right):
             print(board[i][j], end=" ")
         print(" ")
 
 
-Create(5, 5)
+Create(20, 2)
 Render()
