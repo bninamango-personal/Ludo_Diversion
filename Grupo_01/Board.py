@@ -20,3 +20,6 @@ def Render():
 
 Create(20, 2)
 Render()
+
+def Getvalue(x,y):
+    if player1(y)=player2(y)
