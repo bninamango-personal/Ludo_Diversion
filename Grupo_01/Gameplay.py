@@ -68,19 +68,20 @@ def UpdatePlayer():
 
 
 # Dado
-def Launch(force: str) -> str:
-    force = force.lower()
-    if force == "debil":
+def Launch(steps: str) -> str:
+    steps = steps.lower()
+    if steps == "debil":
         return random.randint(1, 3)
-    elif force == "normal":
+    elif steps == "normal":
         return random.randint(1, 6)
-    elif force == "fuerte":
+    elif steps == "fuerte":
         return random.randint(4, 6)
     return 0
 
 
 # Game Loop
-force = 0
+force: int = 0
+isGameOver: bool = False
 
 
 def Start():
@@ -95,7 +96,6 @@ def Input():
 
 
 def Update():
-    print(f"steps: {force}")
     MovePlayer(force)
     UpdateBoard()
     UpdatePlayer()
@@ -106,19 +106,7 @@ def Render():
 
 
 Start()
-while True:
+while not isGameOver:
     Input()
     Update()
     Render()
-
-# ----------------------------
-# UpdateBoard(0, 0, 'B')
-# RenderBoard()
-# print(f"Value 01: {GetValue(0,0)}")
-# print(f"Value 02: {GetValue(0,1)}")
-# input("CLEAR: ")
-# # ----------------------------
-# UpdateBoard(0, 1, 'B')
-# RenderBoard()
-# print(f"Value 01: {GetValue(0,0)}")
-# print(f"Value 02: {GetValue(0, 1)}")
