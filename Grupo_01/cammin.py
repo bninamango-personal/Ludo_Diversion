@@ -66,7 +66,8 @@ def MovePlayer_P1(y: int):
     p1_y -= y
     if board[p1_y][p1_x] == "BONUS":
         print("¡P1 cayo en BONUS! ,Vuelve a lanzar el dado.")
-        p1_y -= Launch(force)
+        force= Launch(input("Ingresa la fuerza de lanzamiento 7w7"))
+        p1_y -= (force)
     board[p1_y][p1_x] = p1_name
 
 
@@ -76,7 +77,8 @@ def MovePlayer_P2(y: int):
     p2_y -= y
     if board[p2_y][p2_x] == "BONUS":
         print("¡P2 cayo en BONUS! Vuelve a lanzar el dado.")
-        p2_y -= Launch(force)
+        force =Launch(input("Ingresa fuerza de lanzamiento 0-0"))
+        p2_y -=(force)
     board[p2_y][p2_x] = p2_name
 
 
@@ -130,7 +132,7 @@ turn = force = 0
 
 
 def Start():
-    InitializePlayer(1, 20, 'Bryan', 'Bryannsss')
+    InitializePlayer(1, 20, 'P1', 'P2')
     RenderBoard()
 
 
