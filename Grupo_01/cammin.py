@@ -82,6 +82,17 @@ def MovePlayer_P2(y: int):
     board[p2_y][p2_x] = p2_name
 
 
+def KillPlayer():
+    global p1_x, p1_y, p2_x , p2_y
+    if player== p1:
+        p1_x=0
+        p1_y=20
+        print("P1 ha muerto, regreso al inicio del tablero")
+    elif player==p2:
+        p2_x = 0
+        p2_y = 20
+        print("P2 ha muerto,regreso al inicio del tablero")
+
 def UpdatePlayer():
     # if y < 0:
     #     y = abs(y) - 1
