@@ -197,6 +197,8 @@ def Render(on_start: bool = False):
 
 
 def Game_Loop():
+    global board, game_over, current_turn, dice
+    global p1, p2, px_aux, py_aux
     Start()
     while not game_over:
         Input()
