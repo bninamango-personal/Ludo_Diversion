@@ -1,20 +1,28 @@
-import Gameplay_PVP as pvp
-import Gameplay_PVC as pvc
+import Gameplay as pvp
+from colorama import Fore, init
 
 
-def Select(option: str) -> int:
-    print("#" * 20, end="\n")
-    return int(option)
+def Select(option: str, limit: int) -> int:
+    while not option.isnumeric():
+        option = input("Ingrese un numero VALIDO: ")
+
+    value = int(option)
+
+    while value < 1 or value > limit:
+        value = int(input("Ingrese una opcion VALIDA: "))
+
+    return value
 
 
 def Start():
     print()
-    print('## MENU DE INICIO ##')
-    print('1. Empezar el juego')
-    print('2. Records')
-    print('3. Salir')
+    print(f'{Fore.GREEN}## MENU DE INICIO ##')
+    print(f'{Fore.MAGENTA}1. Empezar el juego')
+    print(f'{Fore.CYAN}2. Records')
+    print(f'{Fore.RED}3. Salir')
+    print("#" * 20, end="\n")
 
-    option = Select(input("Seleccione una opcion: "))
+    option = Select(input("Seleccione una opcion: "), 3)
 
     print()
 
@@ -27,29 +35,32 @@ def Start():
 
 
 def Gameplay():
-    print('## TIPO DE JUEGO ##')
-    print('1. 1 VS 2')
-    print('2. 1 VS CPU')
-    print("3. Retroceder")
+    print(f'{Fore.GREEN}## TIPO DE JUEGO ##')
+    print(f'{Fore.MAGENTA}1. 1 VS 2')
+    print(f'{Fore.CYAN}2. 1 VS CPU')
+    print(f"{Fore.RED}3. Retroceder")
     print("#" * 20)
 
-    option = Select(input("Seleccione una opcion: "))
+    option = Select(input("Seleccione una opcion: "), 3)
 
     if option == 1:
         pvp.Game_Loop()
     elif option == 2:
-        pvc.Game_Loop()
+        pvp.Game_Loop(enable_pvp=False)
     elif option == 3:
         Start()
 
 
 def Record():
-    file = open("Records/Record.txt", 'r')
+    file = open("../Ludo_Diversion/Data/Record.txt", 'r')
+
+    print(f'{Fore.GREEN}## RECORDS ##')
 
     for cadena in file:
-        print(cadena)
+        print(Fore.CYAN + cadena)
 
-    input("Presione Enter para continuar ")
+    print("#" * 20)
+    input("Presione Enter para retroceder ")
 
     Start()
 
@@ -59,4 +70,5 @@ def Quit():
 
 
 if __name__ == '__main__':
+    init(autoreset=True)
     Start()

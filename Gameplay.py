@@ -1,42 +1,47 @@
 import random
 import time
+import datetime
+from colorama import Back, Fore, init
 
 board = [
-    ["20", "META"],
-    ["19", " "],
-    ["18", " "],
-    ["17", " "],
-    ["16", " "],
-    ["15", " "],
-    ["14", "BONUS"],
-    ["13", " "],
-    ["12", " "],
-    ["11", " "],
-    ["10", " "],
-    ["09", " "],
-    ["08", "BONUS"],
-    ["07", " "],
-    ["06", " "],
-    ["05", " "],
-    ["04", " "],
-    ["03", " "],
-    ["02", " "],
-    ["01", " "],
-    ["INICIO", " "]]
+    [f"{Back.MAGENTA}20 ", "META"],
+    ["19 ", " "],
+    ["18 ", " "],
+    ["17 ", " "],
+    ["16 ", " "],
+    ["15 ", " "],
+    [f"{Back.MAGENTA}14 ", "BONUS"],
+    ["13 ", " "],
+    ["12 ", " "],
+    ["11 ", " "],
+    ["10 ", " "],
+    ["09 ", " "],
+    [f"{Back.MAGENTA}08 ", "BONUS"],
+    ["07 ", " "],
+    ["06 ", " "],
+    ["05 ", " "],
+    ["04 ", " "],
+    ["03 ", " "],
+    ["02 ", " "],
+    ["01 ", " "],
+    [f"{Back.MAGENTA}INICIO ", " "]]
 game_over = False
 current_turn = 0
 dice = 0
 p1 = ["p1_name", [0, 0]]
-p2 = ["CPU", [0, 0]]
+p2 = ["p2_name", [0, 0]]
 px_aux = py_aux = 0
+is_pvp = False
+winner = "winner"
+start_time = final_time = 0
 
 
 def Jump_Line(jumps: int):
     print("\n" * (jumps - 1))
 
 
-def Player1_GetName() -> str:
-    return p1[0]
+def Player1_GetName(color: bool = True) -> str:
+    return Fore.RED + p1[0] if color else p1[0]
 
 
 def Player1_GetX() -> int:
@@ -55,8 +60,8 @@ def Player1_SetY(y: int):
     p1[1][1] = y
 
 
-def Player2_GetName() -> str:
-    return p2[0]
+def Player2_GetName(color: bool = True) -> str:
+    return Fore.BLUE + p2[0] if color else p2[0]
 
 
 def Player2_GetX() -> int:
@@ -88,16 +93,23 @@ def Get_Value(x: int, y: int) -> str:
 
 
 def Start():
-    p1[1] = [1, 20]
-    p2[1] = [1, 20]
-
-    print("##  Jugadores  ##")
-    p1[0] = input("Ingrese el nombre del jugador 1: ")
-    print("#" * 20)
+    global is_pvp, start_time
 
     Jump_Line(1)
-    board[20][1] = f"{Player1_GetName()} {Player2_GetName()}"
+
+    print(f"{Fore.GREEN}##  Jugadores  ##")
+    p1[0] = input(f"{Fore.RED}Ingrese el nombre del jugador 1: ")
+    p2[0] = input(f"{Fore.BLUE}Ingrese el nombre del jugador 2: ") if is_pvp else "CPU"
+
+    Player1_ResetPosition()
+    Player2_ResetPosition()
+
+    print(f"{Fore.GREEN}#" * 20)
+
+    Jump_Line(1)
+    board[20][1] = f"{Fore.RED + Player1_GetName()} {Fore.BLUE + Player2_GetName()}"
     Render(on_start=True)
+    start_time = time.time()
 
 
 def Input():
@@ -124,22 +136,33 @@ def Input():
             return random.randint(1, 3)
         elif launch == 2:
             return random.randint(1, 6)
-        elif launch == 3:
-            return random.randint(4, 6)
+        return random.randint(4, 6)
 
-    global dice
-    print(f"# Turno del jugador {(current_turn % 2) + 1} #")
+    def Type_Gameplay():
+        global dice, current_turn, is_pvp
 
-    if current_turn % 2 == 0:
-        dice = Get_Dice(input(f"Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
+        color = Fore.RED if current_turn % 2 == 0 else Fore.BLUE
 
-        while dice == 0:
-            dice = Get_Dice(input(f"Ingrese un tipo de tiro VALIDO que desea realizar: "), is_tester=True)
-    else:
-        time.sleep(random.randint(2, 5))
-        dice = Get_Random_Dice()
+        print(f"{color}# Turno del jugador {(current_turn % 2) + 1} #")
 
-    print(f"DADO: Obtuvo el valor de {dice}")
+        if is_pvp:
+            dice = Get_Dice(input(f"{color}Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
+            while dice == 0:
+                dice = Get_Dice(input(f"{color}Ingrese un tipo de tiro VALIDO que desea realizar: "), is_tester=True)
+        else:
+            if current_turn % 2 == 0:
+                dice = Get_Dice(input(f"{color}Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
+                while dice == 0:
+                    dice = Get_Dice(input(f"{color}Ingrese un tipo de tiro VALIDO que desea realizar: "),
+                                    is_tester=True)
+            else:
+                time.sleep(random.randint(2, 5))
+                dice = Get_Random_Dice()
+
+        print(f"{color}DADO: Obtuvo el valor de {dice}")
+
+    Type_Gameplay()
+
     Jump_Line(1)
 
 
@@ -180,22 +203,32 @@ def Update():
                 Player1_ResetPosition()
 
     def Add_Record(data: str):
-        write_file = open("Records/Record.txt", 'a')
-        read_file = open("Records/Record.txt", 'r')
+        global start_time, final_time
+
+        final_time = time.time()
+
+        write_file = open("../Ludo_Diversion/Data/Record.txt", 'a')
+        read_file = open("../Ludo_Diversion/Data/Record.txt", 'r')
 
         index = sum(1 for line in read_file)
+        read_file.close()
 
-        write_file.write(f"[{index + 1}] [{time.ctime(time.time())}] {data}\n")
+        date = time.ctime(final_time)
+        seconds = final_time - start_time
+        chronometer = datetime.timedelta(seconds=seconds)
+
+        write_file.write(f"[{index + 1}] [{date}] [{chronometer}] {data}\n")
         write_file.close()
 
     def Win_Player():
-        global current_turn, px_aux, py_aux, game_over
+        global current_turn, is_pvp, winner
+        global px_aux, py_aux, game_over
 
         if Get_Value(px_aux, py_aux) == "META":
-            # p_name = Player1_GetName() if current_turn % 2 == 0 else Player2_GetName()
+            winner = Player1_GetName() if current_turn % 2 == 0 else Player2_GetName()
 
-            if current_turn % 2 == 0:
-                Add_Record(data=f"{Player1_GetName()}")
+            if not is_pvp and current_turn % 2 == 0:
+                Add_Record(Player1_GetName(color=False))
 
             game_over = True
 
@@ -210,7 +243,7 @@ def Render(on_start: bool = False):
     def Draw_Board():
         for i in range(len(board)):
             for j in range(len(board[0])):
-                print(board[i][j], end=" ")
+                print(board[i][j], end="")
             print()
 
     def Draw_Players():
@@ -219,18 +252,28 @@ def Render(on_start: bool = False):
         board[Player1_GetY()][Player1_GetX()] = Player1_GetName()
         board[Player2_GetY()][Player2_GetX()] = Player2_GetName()
 
-    print("## JUEGO ##")
-    print("# Ludo divertido #")
+    print(f"{Fore.GREEN}## JUEGO ##")
+    print(f"{Fore.GREEN}# Ludo divertido #")
     Draw_Players()
     Draw_Board()
 
 
-def Game_Loop():
-    global board, game_over, current_turn, dice
+def Game_Loop(enable_pvp: bool = True):
+    def Game_Over(player: str):
+        Jump_Line(1)
+        print(f"{Fore.GREEN}#" * 20)
+        print(f"{Fore.GREEN}## GANASTE {player.upper()} ##")
+
+    global board, game_over, current_turn, dice, is_pvp, winner
     global p1, p2, px_aux, py_aux
+
+    is_pvp = enable_pvp
+    init(autoreset=True)
+
     Start()
     while not game_over:
         Input()
         Update()
         Render()
         current_turn += 1
+    Game_Over(winner)
