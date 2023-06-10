@@ -136,7 +136,7 @@ def Input():
         while dice == 0:
             dice = Get_Dice(input(f"Ingrese un tipo de tiro VALIDO que desea realizar: "), is_tester=True)
     else:
-        time.sleep(1)
+        time.sleep(random.randint(2, 5))
         dice = Get_Random_Dice()
 
     print(f"DADO: Obtuvo el valor de {dice}")
