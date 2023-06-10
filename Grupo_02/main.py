@@ -3,7 +3,7 @@ print('## MENU DE INICIO ##')
 def empezar():
     print('1. Empezar el juego')
 def record():
-    print('2. Record')
+    print('2. Records')
 def salir():
     print('3. Salir')
 empezar()
@@ -39,6 +39,6 @@ if opcion1==1:
     print('## JUEGO ##')
     print('# Ludo divertido #')
 elif opcion1==2:
-    print('Record')
+    print('Records')
 elif opcion1==3:
     print('Gracias por ingresar')

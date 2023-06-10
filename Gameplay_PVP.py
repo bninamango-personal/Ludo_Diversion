@@ -130,6 +130,8 @@ def Input():
 
 
 def Update():
+    global dice
+
     def Set_Positions():
         global current_turn, px_aux, py_aux
         px_aux = Player1_GetX() if current_turn % 2 == 0 else Player2_GetX()

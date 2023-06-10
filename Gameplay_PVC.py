@@ -1,4 +1,5 @@
 import random
+import time
 
 board = [
     ["20", "META"],
@@ -135,6 +136,7 @@ def Input():
         while dice == 0:
             dice = Get_Dice(input(f"Ingrese un tipo de tiro VALIDO que desea realizar: "), is_tester=True)
     else:
+        time.sleep(1)
         dice = Get_Random_Dice()
 
     print(f"DADO: Obtuvo el valor de {dice}")
@@ -142,6 +144,8 @@ def Input():
 
 
 def Update():
+    global dice
+
     def Set_Positions():
         global current_turn, px_aux, py_aux
         px_aux = Player1_GetX() if current_turn % 2 == 0 else Player2_GetX()
@@ -175,11 +179,24 @@ def Update():
             else:
                 Player1_ResetPosition()
 
+    def Add_Record(data: str):
+        write_file = open("Records/Record.txt", 'a')
+        read_file = open("Records/Record.txt", 'r')
+
+        index = sum(1 for line in read_file)
+
+        write_file.write(f"[{index + 1}] [{time.ctime(time.time())}] {data}\n")
+        write_file.close()
+
     def Win_Player():
-        global px_aux, py_aux, game_over
+        global current_turn, px_aux, py_aux, game_over
 
         if Get_Value(px_aux, py_aux) == "META":
             # p_name = Player1_GetName() if current_turn % 2 == 0 else Player2_GetName()
+
+            if current_turn % 2 == 0:
+                Add_Record(data=f"{Player1_GetName()}")
+
             game_over = True
 
     Set_Positions()

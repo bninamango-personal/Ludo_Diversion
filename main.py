@@ -11,7 +11,7 @@ def Start():
     print()
     print('## MENU DE INICIO ##')
     print('1. Empezar el juego')
-    print('2. Record')
+    print('2. Records')
     print('3. Salir')
 
     option = Select(input("Seleccione una opcion: "))
@@ -44,9 +44,12 @@ def Gameplay():
 
 
 def Record():
-    print("Your record ...")
+    file = open("Records/Record.txt", 'r')
 
-    input("Presione cualquier tecla para retroceder: ")
+    for cadena in file:
+        print(cadena)
+
+    input("Presione Enter para continuar ")
 
     Start()
 
