@@ -6,7 +6,7 @@ def Initialize():
 
 
 def Play(file: str, chanel: int, volume: float = 1, loop: bool = False):
-    file_path = f"../Ludo_Diversion/Sounds/{file}"
+    file_path = f"Sounds/{file}"
 
     pg.mixer.music.load(file_path)
 

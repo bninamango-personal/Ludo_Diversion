@@ -58,7 +58,7 @@ def Gameplay():
 
 
 def Record():
-    file = open("../Ludo_Diversion/Data/Record.txt", 'r')
+    file = open("Data/Record.txt", 'r')
 
     print(f'{Fore.GREEN}## RECORDS ##')
 

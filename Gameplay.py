@@ -98,12 +98,11 @@ def Start():
 
     Jump_Line(1)
 
-
     print(f"{Fore.GREEN}##  Jugadores  ##")
     p1[0] = input(f"{Fore.RED}Ingrese el nombre del jugador 1: ")
     p2[0] = input(f"{Fore.BLUE}Ingrese el nombre del jugador 2: ") if is_pvp else "CPU"
 
-    # sound_manager.Initialize()
+    sound_manager.Initialize()
     sound_manager.StopAll()
     sound_manager.Play("Theme_gameplay.mp3", 1, volume=0.20, loop=True)
 
@@ -221,8 +220,8 @@ def Update():
 
         final_time = time.time()
 
-        write_file = open("../Ludo_Diversion/Data/Record.txt", 'a')
-        read_file = open("../Ludo_Diversion/Data/Record.txt", 'r')
+        write_file = open("Data/Record.txt", 'a')
+        read_file = open("Data/Record.txt", 'r')
 
         index = sum(1 for line in read_file)
         read_file.close()
