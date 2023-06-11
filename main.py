@@ -1,16 +1,22 @@
 import Gameplay as pvp
+import Sound as sound_manager
 from colorama import Fore, init
 
 
 def Select(option: str, limit: int) -> int:
     while not option.isnumeric():
+        sound_manager.Play("Error.wav", 1)
+
         option = input("Ingrese un numero VALIDO: ")
 
     value = int(option)
 
     while value < 1 or value > limit:
+        sound_manager.Play("Error.wav", 1)
+
         value = int(input("Ingrese una opcion VALIDA: "))
 
+    sound_manager.Play("Enter.wav", 1)
     return value
 
 
@@ -52,7 +58,7 @@ def Gameplay() -> object:
 
 
 def Record():
-    file = open("../Ludo_Diversion/Data/Record.txt", 'r')
+    file = open("Data/Record.txt", 'r')
 
     print(f'{Fore.GREEN}## RECORDS ##')
 
@@ -61,6 +67,8 @@ def Record():
 
     print("#" * 20)
     input("Presione Enter para retroceder ")
+
+    sound_manager.Play("Enter.wav", 1)
 
     Start()
 
@@ -71,4 +79,6 @@ def Quit():
 
 if __name__ == '__main__':
     init(autoreset=True)
+    sound_manager.Initialize()
+    sound_manager.Play("Theme_main.wav", 0, volume=0.25, loop=True)
     Start()
