@@ -2,6 +2,7 @@ import random
 import time
 import datetime
 from colorama import Back, Fore, init
+import Sound as sound_manager
 
 board = [
     [f"{Back.MAGENTA}20 ", "META"],
@@ -97,9 +98,14 @@ def Start():
 
     Jump_Line(1)
 
+
     print(f"{Fore.GREEN}##  Jugadores  ##")
     p1[0] = input(f"{Fore.RED}Ingrese el nombre del jugador 1: ")
     p2[0] = input(f"{Fore.BLUE}Ingrese el nombre del jugador 2: ") if is_pvp else "CPU"
+
+    # sound_manager.Initialize()
+    sound_manager.StopAll()
+    sound_manager.Play("Theme_gameplay.mp3", 1, volume=0.20, loop=True)
 
     Player1_ResetPosition()
     Player2_ResetPosition()
@@ -148,11 +154,15 @@ def Input():
         if is_pvp:
             dice = Get_Dice(input(f"{color}Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
             while dice == 0:
+                sound_manager.Play("Error.wav", 0)
+
                 dice = Get_Dice(input(f"{color}Ingrese un tipo de tiro VALIDO que desea realizar: "), is_tester=True)
         else:
             if current_turn % 2 == 0:
                 dice = Get_Dice(input(f"{color}Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
                 while dice == 0:
+                    sound_manager.Play("Error.wav", 0)
+
                     dice = Get_Dice(input(f"{color}Ingrese un tipo de tiro VALIDO que desea realizar: "),
                                     is_tester=True)
             else:
@@ -162,6 +172,8 @@ def Input():
         print(f"{color}DADO: Obtuvo el valor de {dice}")
 
     Type_Gameplay()
+
+    sound_manager.Play("Move.wav", 0)
 
     Jump_Line(1)
 
@@ -190,6 +202,7 @@ def Update():
     def Lucky_Player():
         global dice, current_turn
         if dice == 6 or Get_Value(px_aux, py_aux) == "BONUS":
+            sound_manager.Play("Lucky.wav", 0)
             current_turn += 1
 
     def Kill_Player():
@@ -201,6 +214,7 @@ def Update():
                 Player2_ResetPosition()
             else:
                 Player1_ResetPosition()
+            sound_manager.Play("Death.wav", 0)
 
     def Add_Record(data: str):
         global start_time, final_time
@@ -263,6 +277,11 @@ def Game_Loop(enable_pvp: bool = True):
         Jump_Line(1)
         print(f"{Fore.GREEN}#" * 20)
         print(f"{Fore.GREEN}## GANASTE {player.upper()} ##")
+
+        sound_manager.StopAll()
+        sound_manager.Play("Win.wav", 0)
+
+        input(f"{Fore.GREEN}Presione Enter para terminar ")
 
     global board, game_over, current_turn, dice, is_pvp, winner
     global p1, p2, px_aux, py_aux
