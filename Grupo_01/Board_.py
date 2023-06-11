@@ -12,7 +12,7 @@ def Create(w: int, h: int):
     print(f"Lenght: {len(board)}")
 
 
-def Update(x: int, y: int, c: str):
+def Update(x: int, y: int, c: str) -> object:
     global board
 
 
