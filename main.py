@@ -40,7 +40,7 @@ def Start():
         Quit()
 
 
-def Gameplay():
+def Gameplay() -> object:
     print(f'{Fore.GREEN}## TIPO DE JUEGO ##')
     print(f'{Fore.MAGENTA}1. 1 VS 2')
     print(f'{Fore.CYAN}2. 1 VS CPU')
