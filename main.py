@@ -14,7 +14,14 @@ def Select(option: str, limit: int) -> int:
     while value < 1 or value > limit:
         sound_manager.Play("Error.wav", 1)
 
-        value = int(input("Ingrese una opcion VALIDA: "))
+        value = input("Ingrese una opcion VALIDA: ")
+
+        while value.isalpha():
+            sound_manager.Play("Error.wav", 1)
+
+            value = input("Ingrese una opcion VALIDA: ")
+
+        value = int(value)
 
     sound_manager.Play("Enter.wav", 1)
     return value
@@ -40,7 +47,7 @@ def Start():
         Quit()
 
 
-def Gameplay() -> object:
+def Gameplay():
     print(f'{Fore.GREEN}## TIPO DE JUEGO ##')
     print(f'{Fore.MAGENTA}1. 1 VS 2')
     print(f'{Fore.CYAN}2. 1 VS CPU')
