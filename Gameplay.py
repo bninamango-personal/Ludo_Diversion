@@ -93,6 +93,16 @@ def Get_Value(x: int, y: int) -> str:
     return board[y][x]
 
 
+def GiveUp_Or_Reset():
+    """
+    1. create a user interface during the game that is not annoying for the player
+    2. Includes the option to give up or restart
+    3. If the option is restart you will have to reset the necessary data in the start function
+    4. If the option is giveup finish the game
+    """
+    ...
+
+
 def Start():
     global is_pvp, start_time
 
