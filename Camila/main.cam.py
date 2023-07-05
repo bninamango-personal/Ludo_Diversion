@@ -1,5 +1,5 @@
 # import Gameplay as pvp
-import Sound as sound_manager
+import Sound_cam as sound_manager
 from colorama import Fore, init
 
 
@@ -44,9 +44,11 @@ def Start():
     if option == 1:
         Gameplay_1()
     elif option == 2:
-        Record_1()
+        # Record_1()
+        ...
     elif option == 3:
-        Info_Player()
+        # Info_Player()
+        ...
     elif option == 4:
         Quit()
 
@@ -66,18 +68,25 @@ def Start():
 #         pvp.Game_Loop(enable_pvp=False)
 #     elif option == 3:
 #         Start()
-
+info_player={}
 def Gameplay_1():
-    print("## Registro de jugador ##")
+    global info_player
+    print(f"{Fore.GREEN }## Registro de jugador ##")
 
-    player = {}
-    player["nombre"] = input("Ingrese su nombre: ")
-    player["correo"] = int(input("Ingrese su correo: "))
-    player["fecha"] = input("Ingrese la fecha en mm-aaaa:")
-    print("¡Bienvenido,", player["nombre"], "!")
-    print("¡Comienza el juego PV1 vs CPU!")
+    nombre = input("Ingrese su nombre: ")
+    correo = input("Ingrese su correo: ")
+    fecha = input("Ingrese su fecha: ")
+    nuevo = fecha.split('-')
 
+    info_player["Nombre"] = nombre
+    info_player["Correo"] = correo
+    info_player["Fecha"] =[int(f) for f in nuevo]
 
+    print("¡Bienvenido,", Fore.YELLOW + nombre, "!")
+    print(f"¡Comienza el juego{Fore.CYAN} PV1 vs CPU!")
+    print(f"La fecha es: {info_player['Fecha'][0]}-{info_player['Fecha'][1]}")
+
+#
 # def Record():
 #     file = open("Data/Record.txt", 'r')
 #
@@ -92,58 +101,58 @@ def Gameplay_1():
 #     sound_manager.Play("Enter.wav", 1)
 #
 #     Start()
-def Record_1():
-    """
-    1. Create menu "## RECORD ##"
-    2. In "Winner_List_Menu" create menu "## Lista de ganadores ##"
-    3. In "Winner_Month_Menu" create menu "## Ganadores del mes ##"
-    3. And finally include option to go back between menus
-    """
-    def Winner_List_Menu():
-        print("## Lista de ganadores ##")
-        print(f"1. El ganador 1 es :{player}")
-        print(f"2. El ganador 2 es :{player}")
-        print(f"3. El ganador 3 es :{player}")
-        print("#" * 20)
-        input("Presione Enter para retroceder")
-        sound_manager.Play("Enter.wav", 1)
-        Record_1()
-
-    def Winner_Month_Menu():
-        print(f"Ganadores del mes de")
-        print(" - Ganador 1")
-        print(" - Ganador 2")
-        print(f" Ganadores del mes de")
-        print(" - Ganador 3")
-        print("#" * 20)
-        input("Presione Enter para retroceder")
-        sound_manager.Play("Enter.wav", 1)
-        Record_1()
-
-    print("## RECORD ##")
-    print(f"{Fore.MAGENTA}1. Lista de ganadores")
-    print(f"{Fore.CYAN}2. Ganadores del mes")
-    print(f"{Fore.RED}3. Retroceder")
-    print("#" * 20)
-    option = Select(input("Seleccione una opción: "), 3)
-    print()
-
-    if option == 1:
-        Winner_List_Menu()
-    elif option == 2:
-        Winner_Month_Menu()
-    elif option == 3:
-        Start()
-
-
-def Info_Player():
-    """
-    1. Create menu "## INFO DE JUGADORES ##"
-    2. In "Search_Player_Menu" create menu "## BUSCAR JUGADOR ##"
-    3. And finally include option to go back between menus
-    """
-    def Search_Player_Menu():
-        ...
+# def Record_1():
+#     """
+#     1. Create menu "## RECORD ##"
+#     2. In "Winner_List_Menu" create menu "## Lista de ganadores ##"
+#     3. In "Winner_Month_Menu" create menu "## Ganadores del mes ##"
+#     3. And finally include option to go back between menus
+#     """
+    # def Winner_List_Menu():
+    #     print("## Lista de ganadores ##")
+    #     print(f"1. El ganador 1 es :{player}")
+    #     print(f"2. El ganador 2 es :{player}")
+    #     print(f"3. El ganador 3 es :{player}")
+    #     print("#" * 20)
+    #     input("Presione Enter para retroceder")
+    #     sound_manager.Play("Enter.wav", 1)
+    #     Record_1()
+    #
+    # def Winner_Month_Menu():
+    #     print(f"Ganadores del mes de")
+    #     print(" - Ganador 1")
+    #     print(" - Ganador 2")
+    #     print(f" Ganadores del mes de")
+    #     print(" - Ganador 3")
+    #     print("#" * 20)
+    #     input("Presione Enter para retroceder")
+    #     sound_manager.Play("Enter.wav", 1)
+    #     Record_1()
+    #
+    # print("## RECORD ##")
+    # print(f"{Fore.MAGENTA}1. Lista de ganadores")
+    # print(f"{Fore.CYAN}2. Ganadores del mes")
+    # print(f"{Fore.RED}3. Retroceder")
+    # print("#" * 20)
+    # option = Select(input("Seleccione una opción: "), 3)
+    # print()
+    #
+    # if option == 1:
+    #     Winner_List_Menu()
+    # elif option == 2:
+    #     Winner_Month_Menu()
+    # elif option == 3:
+    #     Start()
+#
+#
+# def Info_Player():
+#     """
+#     1. Create menu "## INFO DE JUGADORES ##"
+#     2. In "Search_Player_Menu" create menu "## BUSCAR JUGADOR ##"
+#     3. And finally include option to go back between menus
+#     """
+#     def Search_Player_Menu():
+#         ...
 
 
 def Quit():
