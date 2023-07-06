@@ -33,22 +33,20 @@ def Start():
     # print(f'{Fore.MAGENTA}1. Empezar el juego')
     print(f'{Fore.MAGENTA}1. Jugador 1 vs. CPU')
     print(f'{Fore.CYAN}2. Record')
-    print(f'{Fore.CYAN}3. Info de jugadores')
-    print(f'{Fore.RED}3. Salir')
+    print(f'{Fore.WHITE}3. Info de jugadores')
+    print(f'{Fore.RED}4. Salir')
     print("#" * 20, end="\n")
 
-    option = Select(input("Seleccione una opcion: "), 3)
+    option = Select(input("Seleccione una opcion: "), 4)
 
     print()
 
     if option == 1:
         Gameplay_1()
-    elif option == 2:
-        # Record_1()
-        ...
+#   elif option == 2:
+#       Record_1()
     elif option == 3:
-        # Info_Player()
-        ...
+        Info_Player()
     elif option == 4:
         Quit()
 
@@ -85,7 +83,19 @@ def Gameplay_1():
     print("¡Bienvenido,", Fore.YELLOW + nombre, "!")
     print(f"¡Comienza el juego{Fore.CYAN} PV1 vs CPU!")
     print(f"La fecha es: {info_player['Fecha'][0]}-{info_player['Fecha'][1]}")
+    print('#'*20)
 
+    carpeta_info = 'Info'
+
+    nombre_archivo = f'{carpeta_info}/{correo}.txt'
+
+    with open(nombre_archivo, 'w') as archivo:
+        archivo.write(f'Ha ganado 1 vez\nLos movimientos de su ultimo intento son:\n5 - 5 - 5 - 5\n####################')    #Puedo escribir lo que quiera
+
+    nombre_base = os.path.basename(nombre_archivo)
+
+    if correo == nombre_base[:-4]:
+        pvp.Game_Loop(enable_pvp=False)
 
 def Record():
     file = open("Data/Record.txt", 'r')
@@ -143,17 +153,38 @@ def Record():
     #     Winner_Month_Menu()
     # elif option == 3:
     #     Start()
-#
-#
-# def Info_Player():
-#     """
-#     1. Create menu "## INFO DE JUGADORES ##"
-#     2. In "Search_Player_Menu" create menu "## BUSCAR JUGADOR ##"
-#     3. And finally include option to go back between menus
-#     """
-#     def Search_Player_Menu():
-#         ...
 
+def Info_Player():
+    print(f'{Fore.GREEN}##  INFO DE JUGADORES  ##')
+    print(f'{Fore.MAGENTA}1. Buscador jugador')
+    print(f"{Fore.RED}2. Regresar al menu principal")
+    print("#" * 20)
+
+    option = Select(input("Seleccione una opcion: "), 2)
+
+    if option == 1:
+        def Search_Player_Menu():
+            correo = input("Ingrese su correo: ")
+            nombre = input("Nombre: ")
+
+            ruta = f'Info/{correo}.txt'
+
+            if os.path.isfile(ruta):
+                with open(ruta, 'r') as archivo:
+                    contenido = archivo.read()
+                    for cadena in contenido:
+                        print(Fore.CYAN + cadena, end='')
+            print()
+            print("#" * 20)
+
+            regresar = int(input("Ingrese 0 para regresar al menu principal"))
+
+            if regresar == 0:
+                Start()
+
+        Search_Player_Menu()
+    elif option == 2:
+            Start()
 
 def Quit():
     print()
@@ -164,4 +195,3 @@ if __name__ == '__main__':
     sound_manager.Initialize()
     sound_manager.Play("Theme_main.wav", 0, volume=0.25, loop=True)
     Start()
-
