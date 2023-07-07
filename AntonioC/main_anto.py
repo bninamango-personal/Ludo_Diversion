@@ -31,7 +31,7 @@ def Start():
     print()
     print(f'{Fore.GREEN}## MENU DE INICIO ##')
     # print(f'{Fore.MAGENTA}1. Empezar el juego')
-    print(f'{Fore.MAGENTA}1. Jugador 1 vs. CPU')
+    print(f'{Fore.MAGENTA}1. Jugador 1 vs CPU')
     print(f'{Fore.CYAN}2. Record')
     print(f'{Fore.WHITE}3. Info de jugadores')
     print(f'{Fore.RED}4. Salir')
