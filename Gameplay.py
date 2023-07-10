@@ -3,6 +3,8 @@ import time
 import datetime
 from colorama import Back, Fore, init
 import Sound as sound_manager
+import Info as info_manager
+import os
 
 board = [
     [f"{Back.MAGENTA}20 ", "META"],
@@ -35,6 +37,11 @@ px_aux = py_aux = 0
 is_pvp = False
 winner = "winner"
 start_time = final_time = 0
+
+# Part - 2
+player_info = dict()
+ID = ""
+movements = 0
 
 
 def Jump_Line(jumps: int):
@@ -103,14 +110,59 @@ def GiveUp_Or_Reset():
     ...
 
 
-def Start():
-    global is_pvp, start_time
+# Part - 2
+def Player_Register():
+    global player_info, ID
+    print(f"{Fore.GREEN}## REGISTRO DE JUGADOR ##")
+
+    nombre = input("Ingrese su nombre: ")
+    correo = input("Ingrese su correo: ")
+    fecha = input("Ingrese su fecha: ")
+
+    player_info = {correo: {"Nombre": nombre, "Fecha": fecha, "Movimientos": "", "Copas": 0}}
+
+    ID = correo
+    p1[0] = nombre
+
+    print("####################")
+
+
+# def Start():
+#     global is_pvp, start_time
+#
+#     Jump_Line(1)
+#
+#     print(f"{Fore.GREEN}##  Jugadores  ##")
+#     p1[0] = input(f"{Fore.RED}Ingrese el nombre del jugador 1: ")
+#     p2[0] = input(f"{Fore.BLUE}Ingrese el nombre del jugador 2: ") if is_pvp else "CPU"
+#
+#     sound_manager.Initialize()
+#     sound_manager.StopAll()
+#     sound_manager.Play("Theme_gameplay.mp3", 1, volume=0.20, loop=True)
+#
+#     Player1_ResetPosition()
+#     Player2_ResetPosition()
+#
+#     print(f"{Fore.GREEN}#" * 20)
+#
+#     Jump_Line(1)
+#     board[20][1] = f"{Fore.RED + Player1_GetName()} {Fore.BLUE + Player2_GetName()}"
+#     Render(on_start=True)
+#     start_time = time.time()
+
+
+def Start_1():
+    global is_pvp, start_time, player_info
+
+    Player_Register()
 
     Jump_Line(1)
 
-    print(f"{Fore.GREEN}##  Jugadores  ##")
-    p1[0] = input(f"{Fore.RED}Ingrese el nombre del jugador 1: ")
-    p2[0] = input(f"{Fore.BLUE}Ingrese el nombre del jugador 2: ") if is_pvp else "CPU"
+    print(f"{Fore.GREEN}##  ¡Bienvenido {p1[0]}!  ##")
+
+    print(f"¡Comienza el juego{Fore.CYAN} PV1 vs CPU!")
+
+    p2[0] = "CPU"
 
     sound_manager.Initialize()
     sound_manager.StopAll()
@@ -196,10 +248,11 @@ def Update():
         py_aux = Player1_GetY() if current_turn % 2 == 0 else Player2_GetY()
 
     def Move_Player(steps: int):
-        global px_aux, py_aux
+        global px_aux, py_aux, movements
         board[py_aux][px_aux] = ' '
 
         if current_turn % 2 == 0:
+            movements += 1
             Player1_SetY(abs(py_aux - steps))
             px_aux = Player1_GetX()
             py_aux = Player1_GetY()
@@ -225,33 +278,45 @@ def Update():
                 Player1_ResetPosition()
             sound_manager.Play("Death.wav", 0)
 
-    def Add_Record(data: str):
-        global start_time, final_time
-
-        final_time = time.time()
-
-        write_file = open("Data/Record.txt", 'a')
-        read_file = open("Data/Record.txt", 'r')
-
-        index = sum(1 for line in read_file)
-        read_file.close()
-
-        date = time.ctime(final_time)
-        seconds = final_time - start_time
-        chronometer = datetime.timedelta(seconds=seconds)
-
-        write_file.write(f"[{index + 1}] [{date}] [{chronometer}] {data}\n")
-        write_file.close()
+    # def Add_Record(data: str):
+    #     global start_time, final_time
+    #
+    #     final_time = time.time()
+    #
+    #     write_file = open("Data/Record.txt", 'a')
+    #     read_file = open("Data/Record.txt", 'r')
+    #
+    #     index = sum(1 for line in read_file)
+    #     read_file.close()
+    #
+    #     date = time.ctime(final_time)
+    #     seconds = final_time - start_time
+    #     chronometer = datetime.timedelta(seconds=seconds)
+    #
+    #     write_file.write(f"[{index + 1}] [{date}] [{chronometer}] {data}\n")
+    #     write_file.close()
 
     def Win_Player():
         global current_turn, is_pvp, winner
         global px_aux, py_aux, game_over
+        global player_info, ID, movements
 
         if Get_Value(px_aux, py_aux) == "META":
             winner = Player1_GetName() if current_turn % 2 == 0 else Player2_GetName()
 
             if not is_pvp and current_turn % 2 == 0:
-                Add_Record(Player1_GetName(color=False))
+                if info_manager.Get_Info(ID) != -1:
+                    aux_mov: str = info_manager.Get_Info(ID)["Movimientos"]
+                    aux_copas: int = info_manager.Get_Info(ID)["Copas"]
+                    player_info[ID].update({"Movimientos": f"{aux_mov}-{movements}"})
+                    player_info[ID].update({"Copas": aux_copas + 1})
+                else:
+                    player_info[ID].update({"Movimientos": f"{movements}"})
+                    player_info[ID].update({"Copas": f"{1}"})
+
+                info_manager.Write_File(player_info)
+
+                # Add_Record(Player1_GetName(color=False))
 
             game_over = True
 
@@ -298,7 +363,7 @@ def Game_Loop(enable_pvp: bool = True):
     is_pvp = enable_pvp
     init(autoreset=True)
 
-    Start()
+    Start_1()
     while not game_over:
         Input()
         Update()
