@@ -1,4 +1,6 @@
-# import Gameplay as pvp
+import gameplay_cam as pvp
+import os
+
 import Sound_cam as sound_manager
 from colorama import Fore, init
 
@@ -34,7 +36,7 @@ def Start():
     print(f'{Fore.MAGENTA}1. Jugador 1 vs. CPU')
     print(f'{Fore.CYAN}2. Record')
     print(f'{Fore.CYAN}3. Info de jugadores')
-    print(f'{Fore.RED}3. Salir')
+    print(f'{Fore.RED}4. Salir')
     print("#" * 20, end="\n")
 
     option = Select(input("Seleccione una opcion: "), 3)
@@ -68,9 +70,9 @@ def Start():
 #         pvp.Game_Loop(enable_pvp=False)
 #     elif option == 3:
 #         Start()
-info_player={}
+Info_player={}
 def Gameplay_1():
-    global info_player
+    global Info_Player
     print(f"{Fore.GREEN }## Registro de jugador ##")
 
     nombre = input("Ingrese su nombre: ")
@@ -78,14 +80,28 @@ def Gameplay_1():
     fecha = input("Ingrese su fecha: ")
     nuevo = fecha.split('-')
 
-    info_player["Nombre"] = nombre
-    info_player["Correo"] = correo
-    info_player["Fecha"] =[int(f) for f in nuevo]
+    Info_player["Nombre"] = nombre
+    Info_player["Correo"] = correo
+    Info_player["Fecha"] =[int(f) for f in nuevo]
 
     print("¡Bienvenido,", Fore.YELLOW + nombre, "!")
     print(f"¡Comienza el juego{Fore.CYAN} PV1 vs CPU!")
-    print(f"La fecha es: {info_player['Fecha'][0]}-{info_player['Fecha'][1]}")
-
+    print(f"La fecha es: {Info_player['Fecha'][0]}-{Info_player['Fecha'][1]}")
+    print('#'*20)
+    # carpeta_info = 'Info_player'
+    #
+    # if not os.path.exists(carpeta_info):
+    #     os.makedirs(carpeta_info)
+    #
+    # nombre_archivo = f'{carpeta_info}/{correo}.txt'
+    #
+    # with open(nombre_archivo, 'w') as archivo:
+    #     archivo.write('Ha ganado 1 vez\nLos movimientos de su ultimo intento son:\n5 - 5 − 5 − 5\n####################')  # Puedo escribir lo que quiera
+    #
+    # nombre_base = os.path.basename(nombre_archivo)
+    #
+    # if correo == nombre_base[:-4]:
+    #     pvp.Game_Loop(enable_pvp=False)
 #
 # def Record():
 #     file = open("Data/Record.txt", 'r')
@@ -145,15 +161,39 @@ def Gameplay_1():
     #     Start()
 #
 #
-# def Info_Player():
-#     """
-#     1. Create menu "## INFO DE JUGADORES ##"
-#     2. In "Search_Player_Menu" create menu "## BUSCAR JUGADOR ##"
-#     3. And finally include option to go back between menus
-#     """
-#     def Search_Player_Menu():
-#         ...
 
+# def Info_Player():
+#     print(f'{Fore.GREEN}##  INFO DE JUGADORES  ##')
+#     print(f'{Fore.MAGENTA}1. Buscador jugador')
+#     print(f"{Fore.RED}2. Regresar al menu principal")
+#     print("#" * 20)
+#
+#     option = Select(input("Seleccione una opcion: "), 2)
+#
+#     if option == 1:
+#         def Search_Player_Menu():
+#             correo = input("Ingrese su correo: ")
+#             nombre = input("Nombre: ")
+#
+#             ruta = f'Info_player/{correo}.txt'
+#
+#             if os.path.isfile(ruta):
+#                 with open(ruta, 'r') as archivo:
+#                     contenido = archivo.read()
+#                     for cadena in contenido:
+#                         print(Fore.CYAN + cadena, end='')
+#             print()
+#             print("#" * 20)
+#
+#             regresar = int(input("Ingrese 0 para regresar al menu principal"))
+#
+#             if regresar == 0:
+#                 Start()
+#
+#         Search_Player_Menu()
+#     elif option == 2:
+#             Start()
+#
 
 def Quit():
     print()
