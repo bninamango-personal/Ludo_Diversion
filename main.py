@@ -35,10 +35,10 @@ def Start():
     print(f'{Fore.MAGENTA}1. Jugador 1 vs. CPU')
     print(f'{Fore.CYAN}2. Record')
     print(f'{Fore.CYAN}3. Info de jugadores')
-    print(f'{Fore.RED}3. Salir')
+    print(f'{Fore.RED}4. Salir')
     print("#" * 20, end="\n")
 
-    option = Select(input("Seleccione una opcion: "), 3)
+    option = Select(input("Seleccione una opcion: "), 4)
 
     print()
 
@@ -130,7 +130,8 @@ def Record_1():
     print("## RECORD ##")
     print(f"{Fore.MAGENTA}1. Lista de ganadores")
     print(f"{Fore.CYAN}2. Ganadores del mes")
-    print(f"{Fore.RED}3. Regresar al menu principal")
+    print(f"{Fore.CYAN}3. Exportar")
+    print(f"{Fore.RED}4. Regresar al menu principal")
     print("#" * 20)
     option = Select(input("Seleccione una opción: "), 3)
 
@@ -152,12 +153,42 @@ def Info_Player():
     """
 
     def Search_Player_Menu():
-        ...
+        correo = input("Ingrese su correo: ")
+
+        data = info_manager.Get_Player(correo)
+
+        if data != -1:
+            nombre = data["Nombre"]
+            movimientos = data["Movimientos"]
+            copas = data["Copas"]
+
+            print(f"Nombre: {nombre}")
+            print(f"Ha ganado {copas} vez")
+            print(f"Los movimientos de sus ultimo intento son: \n"
+                  f"{movimientos}")
+
+            var_1 = input(f"Exportar (s/n): ")
+
+            if var_1 == 's':
+                info_manager.Export_PDF(correo)
+
+        input("Presione Enter para retroceder")
+        sound_manager.Play("Enter.wav", 1)
+        Info_Player()
+        print()
 
     print(f'{Fore.GREEN}##  INFO DE JUGADORES  ##')
     print(f'{Fore.MAGENTA}1. Buscador jugador')
     print(f"{Fore.RED}2. Regresar al menu principal")
     print("#" * 20)
+
+    option = Select(input("Seleccione una opcion: "), 2)
+
+    if option == 1:
+        Search_Player_Menu()
+    elif option == 2:
+        Start()
+
 
 def Quit():
     print()

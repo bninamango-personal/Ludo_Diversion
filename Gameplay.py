@@ -1,4 +1,5 @@
 import random
+import sys
 import time
 import datetime
 from colorama import Back, Fore, init
@@ -41,7 +42,7 @@ start_time = final_time = 0
 # Part - 2
 player_info = dict()
 ID = ""
-movements = 0
+movements = ""
 
 
 def Jump_Line(jumps: int):
@@ -100,16 +101,6 @@ def Get_Value(x: int, y: int) -> str:
     return board[y][x]
 
 
-def GiveUp_Or_Reset():
-    """
-    1. create a user interface during the game that is not annoying for the player
-    2. Includes the option to give up or restart
-    3. If the option is restart you will have to reset the necessary data in the start function
-    4. If the option is giveup finish the game
-    """
-    ...
-
-
 # Part - 2
 def Player_Register():
     global player_info, ID
@@ -149,6 +140,54 @@ def Player_Register():
 #     board[20][1] = f"{Fore.RED + Player1_GetName()} {Fore.BLUE + Player2_GetName()}"
 #     Render(on_start=True)
 #     start_time = time.time()
+
+def Reset():
+    global board, game_over, current_turn, dice
+    global px_aux, py_aux
+    global is_pvp, winner
+    global movements
+    board = [
+        [f"{Back.MAGENTA}20 ", "META"],
+        ["19 ", " "],
+        ["18 ", " "],
+        ["17 ", " "],
+        ["16 ", " "],
+        ["15 ", " "],
+        [f"{Back.MAGENTA}14 ", "BONUS"],
+        ["13 ", " "],
+        ["12 ", " "],
+        ["11 ", " "],
+        ["10 ", " "],
+        ["09 ", " "],
+        [f"{Back.MAGENTA}08 ", "BONUS"],
+        ["07 ", " "],
+        ["06 ", " "],
+        ["05 ", " "],
+        ["04 ", " "],
+        ["03 ", " "],
+        ["02 ", " "],
+        ["01 ", " "],
+        [f"{Back.MAGENTA}INICIO ", " "]]
+    current_turn = 0
+    game_over = False
+    dice = 0
+    px_aux = py_aux = 0
+    is_pvp = False
+    winner = "winner"
+    movements = ""
+
+    sound_manager.Initialize()
+    sound_manager.StopAll()
+    sound_manager.Play("Theme_gameplay.mp3", 1, volume=0.20, loop=True)
+
+    Player1_ResetPosition()
+    Player2_ResetPosition()
+
+    print(f"{Fore.GREEN}#" * 20)
+
+    Jump_Line(1)
+    board[20][1] = f"{Fore.RED + Player1_GetName()} {Fore.BLUE + Player2_GetName()}"
+    Render(on_start=True)
 
 
 def Start_1():
@@ -206,7 +245,7 @@ def Input():
         return random.randint(4, 6)
 
     def Type_Gameplay():
-        global dice, current_turn, is_pvp
+        global dice, current_turn, is_pvp, movements
 
         color = Fore.RED if current_turn % 2 == 0 else Fore.BLUE
 
@@ -221,6 +260,7 @@ def Input():
         else:
             if current_turn % 2 == 0:
                 dice = Get_Dice(input(f"{color}Ingrese el tipo de tiro que desea realizar: "), is_tester=True)
+                movements += f"{dice}-"
                 while dice == 0:
                     sound_manager.Play("Error.wav", 0)
 
@@ -248,11 +288,10 @@ def Update():
         py_aux = Player1_GetY() if current_turn % 2 == 0 else Player2_GetY()
 
     def Move_Player(steps: int):
-        global px_aux, py_aux, movements
+        global px_aux, py_aux
         board[py_aux][px_aux] = ' '
 
         if current_turn % 2 == 0:
-            movements += 1
             Player1_SetY(abs(py_aux - steps))
             px_aux = Player1_GetX()
             py_aux = Player1_GetY()
@@ -305,14 +344,14 @@ def Update():
             winner = Player1_GetName() if current_turn % 2 == 0 else Player2_GetName()
 
             if not is_pvp and current_turn % 2 == 0:
-                if info_manager.Get_Info(ID) != -1:
-                    aux_mov: str = info_manager.Get_Info(ID)["Movimientos"]
-                    aux_copas: int = info_manager.Get_Info(ID)["Copas"]
-                    player_info[ID].update({"Movimientos": f"{aux_mov}-{movements}"})
-                    player_info[ID].update({"Copas": aux_copas + 1})
+                if info_manager.Get_Player(ID) != -1:
+                    aux_copas: int = info_manager.Get_Player(ID)["Copas"]
+
+                    player_info[ID].update({"Copas": f"{aux_copas + 1}"})
                 else:
-                    player_info[ID].update({"Movimientos": f"{movements}"})
                     player_info[ID].update({"Copas": f"{1}"})
+
+                player_info[ID].update({"Movimientos": f"{movements[:-1]}"})
 
                 info_manager.Write_File(player_info)
 
@@ -340,10 +379,35 @@ def Render(on_start: bool = False):
         board[Player1_GetY()][Player1_GetX()] = Player1_GetName()
         board[Player2_GetY()][Player2_GetX()] = Player2_GetName()
 
+    def GiveUp_Reset():
+        global game_over
+
+        var_1 = input(f"Rendirse (s/n): ")
+
+        if var_1.lower() == "s":
+            def Game_Over(player: str):
+                Jump_Line(1)
+                print(f"{Fore.GREEN}#" * 20)
+                print(f"{Fore.GREEN}## GANASTE {player.upper()} ##")
+
+                sound_manager.StopAll()
+                sound_manager.Play("Win.wav", 0)
+
+            sound_manager.StopAll()
+            Game_Over(Player2_GetName())
+            sys.exit()
+
+        var_2 = input(f"Reiniciar (s/n): ")
+
+        if var_2.lower() == "s":
+            Reset()
+
     print(f"{Fore.GREEN}## JUEGO ##")
     print(f"{Fore.GREEN}# Ludo divertido #")
     Draw_Players()
     Draw_Board()
+    if not on_start:
+        GiveUp_Reset()
 
 
 def Game_Loop(enable_pvp: bool = True):

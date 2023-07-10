@@ -1,5 +1,4 @@
-# import pandas as pd
-import calendar
+from reportlab.pdfgen import canvas
 
 
 def To_Dictionary(data: str) -> dict:
@@ -7,7 +6,7 @@ def To_Dictionary(data: str) -> dict:
     key = array[0]
     value = \
         {
-            "Name": array[1],
+            "Nombre": array[1],
             "Fecha": array[2],
             "Movimientos": array[3],
             "Copas": int(array[4])
@@ -103,11 +102,7 @@ def Search_Per_Month(month: str) -> list:
     return info
 
 
-def Search_Player(ID: str) -> list:
-    ...
-
-
-def Get_Info(ID: str) -> dict:
+def Get_Player(ID: str) -> dict:
     aux_dict = Read_File()
 
     if ID in aux_dict:
@@ -149,5 +144,21 @@ def Sort_File() -> list:
     return info
 
 
-def Export_PDF():
-    ...
+def Export_PDF(ID: str):
+    m_canvas = canvas.Canvas("BaseData.pdf")
+
+    coord_x = 100
+    coord_y = 750
+    line_space = 20
+
+    file = open("Data/BaseData.txt", 'r')
+
+    data = Get_Player(ID)
+
+    m_canvas.drawString(coord_x, coord_y, f"E-mail: {ID}")
+    m_canvas.drawString(coord_x, coord_y - line_space, f"Nombre: {data['Nombre']}")
+    m_canvas.drawString(coord_x, coord_y - 2 * line_space, f"Fecha: {data['Fecha']}")
+    m_canvas.drawString(coord_x, coord_y - 3 * line_space, f"Movimientos: {data['Movimientos']}")
+    m_canvas.drawString(coord_x, coord_y - 4 * line_space, f"Cantidad de veces que gano: {data['Copas']}")
+
+    m_canvas.save()
