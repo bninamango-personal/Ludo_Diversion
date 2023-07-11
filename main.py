@@ -130,8 +130,7 @@ def Record_1():
     print("## RECORD ##")
     print(f"{Fore.MAGENTA}1. Lista de ganadores")
     print(f"{Fore.CYAN}2. Ganadores del mes")
-    print(f"{Fore.CYAN}3. Exportar")
-    print(f"{Fore.RED}4. Regresar al menu principal")
+    print(f"{Fore.RED}3. Regresar al menu principal")
     print("#" * 20)
     option = Select(input("Seleccione una opción: "), 3)
 
